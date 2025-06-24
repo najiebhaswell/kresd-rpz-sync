@@ -1,0 +1,9 @@
+Package: kresd-rpz-sync
+Version: 1.0-1
+Section: utils
+Priority: optional
+Architecture: all
+Depends: python3, systemd
+Maintainer: Haswell <maimun.najib@gmedia.id>
+Description: RPZ Sync for Knot Resolver
+ This package installs scripts and timers for syncing RPZ files for Knot Resolver.

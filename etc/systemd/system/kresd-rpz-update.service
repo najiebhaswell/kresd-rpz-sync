@@ -1,0 +1,9 @@
+[Unit]
+Description=Update RPZ File for Knot Resolver
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/knot-update/updates.py
+WorkingDirectory=/opt/knot-update
+User=root

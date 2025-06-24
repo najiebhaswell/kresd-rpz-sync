@@ -1,0 +1,12 @@
+[Unit]
+Description=Initialize kresd cache and RPZ data in tmpfs
+After=network.target
+Before=knot-resolver.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/knot-init.sh
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Reload systemd dan enable timer/service
+systemctl daemon-reexec
+systemctl daemon-reload
+systemctl enable knot-init.service
+systemctl enable knot-delay.service
+systemctl enable kresd-rpz-update.timer
+
+# Buat direktori /dev/shm jika belum ada
+mkdir -p /dev/shm/kresd-rpz
+chown knot-resolver:knot-resolver /dev/shm/kresd-rpz
+
+# Buat symlink jika belum ada
+ln -sf /dev/shm/kresd-rpz/xdomains.rpz /etc/knot-resolver/xdomains.rpz
+ln -sf /dev/shm/kresd-rpz/safesearch.rpz /etc/knot-resolver/safesearch.rpz
+ln -sf /dev/shm/kresd-rpz/custom.rpz /etc/knot-resolver/custom.rpz
+
+# Pastikan /dev/shm punya ukuran 24G
+if ! grep -q "tmpfs /dev/shm tmpfs" /etc/fstab; then
+    echo "tmpfs /dev/shm tmpfs defaults,size=24G 0 0" >> /etc/fstab
+else
+    sed -i 's|tmpfs /dev/shm tmpfs.*|tmpfs /dev/shm tmpfs defaults,size=24G 0 0|' /etc/fstab
+fi
+
+# Remount shm agar ukuran langsung aktif
+mount -o remount /dev/shm || true
